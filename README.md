@@ -16,13 +16,9 @@ electrical qualification remain incomplete.
 
 ## Using
 
-No standalone release is published yet. During bring-up, use a local checkout:
-
-```elixir
-{:nerves_system_em300, path: "../nerves_system_em300", runtime: false, targets: :em300}
-```
-
-After publishing a release, replace `path:` with a matching GitHub tag:
+The `v0.2.0-dev` development prerelease includes a prebuilt artifact. It remains
+hardware-unqualified; publishing it does not qualify the boot chain, radios or
+physical interface mapping. Use the immutable tag:
 
 ```elixir
 {:nerves_system_em300, github: "sid2baker/nerves_system_em300", tag: "v0.2.0-dev", runtime: false, targets: :em300}
@@ -58,8 +54,12 @@ Every push builds the artifact. No Hex package is built or published. To release
    review it and commit it. Git consumers need the manifest in the tagged sources;
    the manifest is excluded from the build fingerprint.
 3. Push a matching `vX.Y.Z` tag.
-4. CI creates a draft release with the artifact and `checksum.exs`. Review it
-   and publish it; Nerves cannot download from a draft.
+4. CI creates a draft release. Before publishing, verify its binary and manifest
+   match the checksum committed in the tag, and its notes match the changelog.
+   Rebuilds may produce different archive bytes under the same fingerprint; in
+   that case use the matching, verified pre-tag CI artifact in the unpublished
+   draft. Never replace published assets or rewrite a tag. Nerves cannot download
+   from a draft.
 
 The artifact includes Buildroot's `legal-info` notices but not source tarballs.
 Review the licensing notes in [SOURCES.md](SOURCES.md) before distributing.
